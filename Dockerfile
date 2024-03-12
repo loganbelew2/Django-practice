@@ -1,22 +1,22 @@
-# Use the official Python image with specified version
 FROM python:3.12.2
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV PATH="/scripts:${PATH}"
 
-# Set work directory
-WORKDIR /app
+WORKDIR /code
+COPY . /code/
 
-# Install dependencies
-COPY requirements.txt /app/
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
+COPY ./scripts /scripts
 
-# Copy project files into the container
-COPY . /app/
+RUN chmod +x /scripts/*
 
-# Expose port 8000 to access the Django development server
-EXPOSE 8000
+RUN mkdir -p /vol/web/media
+RUN mkdir -p /vol/web/static
 
-# Command to run the development server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+RUN adduser --disabled-password user
+RUN chown -R user:user /vol
+RUN chmod -R 755 /vol/web
+USER user
+
+CMD [ "entrypoint.sh" ]
