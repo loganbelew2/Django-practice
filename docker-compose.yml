@@ -2,14 +2,29 @@ version: '3.8'
 
 services:
   db:
-    image: postimage:latest  # Use the already built database image
+    build:
+      context: ./db
+    env_file:
+      - .env
+  django_gunicorn:
+    volumes:
+      - static:/static
+    env_file:
+      - .env
+    build:
+      context: .
     ports:
-      - "5433:5432"  # Map host port 5433 to container port 5432
-
-  web:
-    image: django-app:latest  # Use the already built Django app image
-    command: python manage.py runserver 0.0.0.0:8000
-    ports:
-      - "8000:8000"  # Expose Django app on host port 8000
+      - "8000:8000"
     depends_on:
       - db
+  nginx:
+    build:
+      context: ./nginx
+    volumes:
+      - static:/static
+    ports:
+      - "80:80"
+    depends_on:
+      - django_gunicorn
+volumes:
+  static:

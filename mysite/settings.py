@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
-from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,15 +20,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-load_dotenv()
-SECRET_KEY = os.environ.get('SECRET_KEY')
-# DB_PASSWORD = os.environ["DB_PASSWORD"]
+SECRET_KEY = os.getenv('SECRET_KEY')
+DB_PASSWORD = os.getenv('POSTGRES_PASSWORD')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-INTERNAL_IPS = ("127.0.0.1",)
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -84,7 +80,7 @@ DATABASES = {
         'HOST': "db",
         'NAME': 'django',
         'USER': 'logan',
-        'PASSWORD': '123',
+        'PASSWORD': DB_PASSWORD,
         'PORT': '5432',
     }
 }
@@ -124,9 +120,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+

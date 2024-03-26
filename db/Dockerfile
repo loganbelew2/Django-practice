@@ -1,5 +1,2 @@
 FROM postgres:latest
 
-ENV POSTGRES_DB=django
-ENV POSTGRES_USER=logan
-ENV POSTGRES_PASSWORD=123
